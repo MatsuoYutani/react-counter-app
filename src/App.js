@@ -14,22 +14,15 @@ class App extends Component {
     ],
   };
 
-  constructor() {
-    super()
-    console.log('App - Constructor')
-  }
-
   componentDidMount() {
     // Ajax Call
-    console.log("App - Mounted")
   }
 
-  handleIncrement = (counter) => {
+  handleIncrement = (counter, amount) => {
     const counters = [...this.state.counters];
     const index = counters.indexOf(counter);
     counters[index] = { ...counter };
-    counters[index].value++;
-    console.log(this.state.counters[index]);
+    counters[index].value += amount;
     this.setState({ counters });
   };
 
@@ -46,10 +39,30 @@ class App extends Component {
     this.setState({ counters });
   };
 
+  handleDeleteAll = () => {
+    this.setState({ counters: [] });
+  };
+
+  handleAddCounter = () => {
+    let counters = this.state.counters;
+    counters.push({
+      id: this.state.counters.length + 1,
+      value: 0,
+    });
+    this.setState({ counters });
+  };
+
   render() {
     return (
       <React.Fragment>
-        <NavBar totalCounters={this.state.counters.filter(c=>c.value>0).length}/>
+        <NavBar
+          totalCounters={
+            this.state.counters.filter((c) => c.value !== 0).length
+          }
+          onReset={this.handleReset}
+          onDeleteAll={this.handleDeleteAll}
+          onAddCounter={this.handleAddCounter}
+        />
         <main className="container">
           <Counters
             onReset={this.handleReset}
